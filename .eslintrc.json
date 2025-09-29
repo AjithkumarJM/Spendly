@@ -1,0 +1,17 @@
+{
+    "extends": [
+        "react-app",
+        "eslint:recommended"
+    ],
+    "rules": {
+        "no-unused-vars": "warn",
+        "semi": [
+            "error",
+            "always"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ]
+    }
+}
