@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    currency: "INR", // default
+    currency: "₹", // default symbol
 };
 
 const settingsSlice = createSlice({

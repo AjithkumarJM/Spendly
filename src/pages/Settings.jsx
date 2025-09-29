@@ -22,11 +22,11 @@ export default function Settings() {
                     onChange={(e) => dispatch(setCurrency(e.target.value))}
                     className="border p-2 rounded dark:bg-gray-700 dark:text-gray-200"
                 >
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="INR">INR (₹)</option>
-                    <option value="JPY">JPY (¥)</option>
+                    <option value="$">USD ($)</option>
+                    <option value="€">EUR (€)</option>
+                    <option value="£">GBP (£)</option>
+                    <option value="₹">INR (₹)</option>
+                    <option value="¥">JPY (¥)</option>
                 </select>
             </div>
 

@@ -37,13 +37,13 @@ export default function Layout({ children }) {
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <div className="flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             {/* Sidebar */}
             <aside
-                className={`${collapsed ? "w-20" : "w-64"
-                    } transition-all duration-300 bg-white dark:bg-gray-800 shadow-md flex flex-col`}
+                className={`fixed top-0 left-0 h-full ${collapsed ? "w-20" : "w-64"
+                    } transition-all duration-300 bg-white dark:bg-gray-800 shadow-md flex flex-col z-40`}
             >
-                {/* Logo + Collapse button */}
+                {/* Logo + Collapse */}
                 <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
                     {!collapsed && (
                         <span className="text-xl font-bold text-blue-600 dark:text-blue-400">
@@ -65,8 +65,8 @@ export default function Layout({ children }) {
                             key={item.to}
                             to={item.to}
                             className={`flex items-center px-4 py-2 rounded-md transition-colors ${location.pathname === item.to
-                                    ? "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
-                                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                                ? "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+                                : "hover:bg-gray-100 dark:hover:bg-gray-700"
                                 }`}
                         >
                             {item.icon}
@@ -92,7 +92,8 @@ export default function Layout({ children }) {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 overflow-y-auto relative">
+            <main className={`flex-1 p-6 overflow-y-auto h-screen transition-all duration-300 ${collapsed ? "ml-20" : "ml-64"
+                }`}>
                 {children}
 
                 {/* Floating Add Button */}
@@ -103,7 +104,7 @@ export default function Layout({ children }) {
                     <Plus size={24} />
                 </button>
 
-                {/* Modal */}
+                {/* Add Transaction Modal */}
                 <AnimatePresence>
                     {showModal && (
                         <motion.div
@@ -118,7 +119,6 @@ export default function Layout({ children }) {
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0.8, opacity: 0 }}
                             >
-                                {/* Close Button */}
                                 <button
                                     onClick={() => setShowModal(false)}
                                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"

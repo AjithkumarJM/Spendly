@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
-import Settings from "./pages/CategorySettings";
+import Settings from "./pages/Settings";
 
 export default function App() {
     return (

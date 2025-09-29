@@ -13,24 +13,16 @@ import {
     CartesianGrid,
 } from "recharts";
 
-// Vibrant modern palette
-const COLORS = [
-    "#16a34a", // emerald green
-    "#dc2626", // red
-    "#3b82f6", // blue
-    "#f59e0b", // amber
-    "#9333ea", // purple
-    "#06b6d4", // cyan
-];
+const COLORS = ["#059669", "#e11d48"]; // emerald-600 for income, rose-600 for expense
 
-// Custom tooltip with dark/light mode styles
+// Custom tooltip
 function CustomTooltip({ active, payload, label }) {
     if (active && payload && payload.length) {
         return (
             <div className="p-3 rounded-lg bg-white dark:bg-gray-800 shadow-md text-sm text-gray-700 dark:text-gray-200">
                 <p className="font-semibold mb-1">{label}</p>
                 {payload.map((entry, index) => (
-                    <p key={index} style={{ color: entry.color }}>
+                    <p key={index} style={{ color: entry.color }} className="font-medium">
                         {entry.name}: {entry.value}
                     </p>
                 ))}
@@ -40,7 +32,7 @@ function CustomTooltip({ active, payload, label }) {
     return null;
 }
 
-// Pie Chart for Income vs Expense
+// Pie chart for Income vs Expense
 export function IncomeExpensePie({ data }) {
     const totals = [
         {
@@ -67,7 +59,10 @@ export function IncomeExpensePie({ data }) {
                         innerRadius={60}
                         outerRadius={100}
                         paddingAngle={5}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }) =>
+                            `${name} ${(percent * 100).toFixed(0)}%`
+                        }
+                        labelStyle={{ fontSize: "0.9rem", fontWeight: 600 }}
                     >
                         {totals.map((_, index) => (
                             <Cell
@@ -86,7 +81,7 @@ export function IncomeExpensePie({ data }) {
     );
 }
 
-// Bar Chart for Yearly Overview
+// Bar chart for Yearly overview
 export function YearlyBarChart({ data }) {
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
@@ -98,15 +93,15 @@ export function YearlyBarChart({ data }) {
                     <YAxis stroke="currentColor" />
                     <Tooltip content={<CustomTooltip />} />
                     <Legend />
-                    <Bar dataKey="income" name="Income" fill="#16a34a" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="expense" name="Expense" fill="#dc2626" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="income" name="Income" fill="#059669" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="expense" name="Expense" fill="#e11d48" radius={[8, 8, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
         </div>
     );
 }
 
-// Extra: Line Chart for Balance Trend (optional eye candy)
+// Line-style balance chart using Bar for simplicity
 export function BalanceLineChart({ data }) {
     const balanceData = data.map((d) => ({
         month: d.month,
@@ -117,7 +112,7 @@ export function BalanceLineChart({ data }) {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
             <h2 className="text-lg font-semibold mb-3">Balance Trend</h2>
             <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={balanceData}>
+                <BarChart data={balanceData} barSize={30}>
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.2} />
                     <XAxis dataKey="month" stroke="currentColor" />
                     <YAxis stroke="currentColor" />
