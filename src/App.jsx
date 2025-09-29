@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
-import AddTransaction from "./pages/AddTransaction";
-import CategorySettings from "./pages/CategorySettings";
+import Settings from "./pages/CategorySettings";
 
 export default function App() {
     return (
@@ -13,10 +12,10 @@ export default function App() {
                 <Routes>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/transactions" element={<Transactions />} />
-                    <Route path="/add" element={<AddTransaction />} />
-                    <Route path="/settings" element={<CategorySettings />} />
+                    <Route path="/settings" element={<Settings />} />
                     <Route path="/" element={<Dashboard />} />
                 </Routes>
+
             </Layout>
         </Router>
     );

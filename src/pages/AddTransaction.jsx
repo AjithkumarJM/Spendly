@@ -1,64 +1,67 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
 
+// Category dummy data (same as before)
 const categories = {
     Income: {
-        "Salary": ["Base Pay", "Bonus", "Commission"],
-        "Business": ["Sales", "Services", "Investments"],
-        "Freelance": ["Projects", "Consulting", "Others"],
-        "Gifts": ["Cash Gift", "Other Gifts"],
-        "Other": ["Miscellaneous"],
+        Salary: ["Base Pay", "Bonus", "Commission"],
+        Business: ["Sales", "Services", "Investments"],
+        Freelance: ["Projects", "Consulting", "Others"],
+        Gifts: ["Cash Gift", "Other Gifts"],
+        Other: ["Miscellaneous"],
     },
     Expense: {
-        "Housing": ["Rent/Mortgage", "Utilities", "Internet & Phone", "Maintenance"],
-        "Transportation": ["Fuel", "Public Transit", "Ride-Hailing", "Parking", "Repairs"],
+        Housing: ["Rent/Mortgage", "Utilities", "Internet & Phone", "Maintenance"],
+        Transportation: ["Fuel", "Public Transit", "Ride-Hailing", "Parking", "Repairs"],
         "Food & Dining": ["Groceries", "Restaurants", "Coffee/Snacks"],
-        "Shopping": ["Clothing", "Electronics", "Household", "Personal Care"],
+        Shopping: ["Clothing", "Electronics", "Household", "Personal Care"],
         "Health & Fitness": ["Medical", "Pharmacy", "Gym", "Insurance"],
-        "Entertainment": ["Subscriptions", "Movies", "Hobbies"],
-        "Education": ["Tuition", "Books", "Online Courses"],
-        "Travel": ["Flights", "Hotels", "Local Transport", "Food & Misc"],
+        Entertainment: ["Subscriptions", "Movies", "Hobbies"],
+        Education: ["Tuition", "Books", "Online Courses"],
+        Travel: ["Flights", "Hotels", "Local Transport", "Food & Misc"],
         "Financial Obligations": ["Loan", "Credit Card", "Investments"],
-        "Miscellaneous": ["Donations", "Gifts", "Pets", "Other"],
+        Miscellaneous: ["Donations", "Gifts", "Pets", "Other"],
     },
 };
 
-export default function AddTransaction() {
+export default function AddTransaction({ onClose }) {
     const dispatch = useDispatch();
+
+    // Default date = today
+    const today = new Date().toISOString().split("T")[0];
+
     const [form, setForm] = useState({
         type: "Expense",
         category: "",
         subcategory: "",
         amount: "",
-        date: "",
+        date: today,
+        note: "",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!form.category || !form.subcategory || !form.amount || !form.date) return;
-
+        if (!form.category || !form.subcategory || !form.amount) return;
         dispatch(addTransaction({ ...form, id: Date.now(), amount: Number(form.amount) }));
-        setForm({ type: "Expense", category: "", subcategory: "", amount: "", date: "" });
+        onClose(); // close modal after save
     };
 
     const availableCategories = Object.keys(categories[form.type] || {});
     const availableSubcategories = categories[form.type]?.[form.category] || [];
 
     return (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto">
+        <div>
             <h1 className="text-2xl font-semibold mb-4">Add Transaction</h1>
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md space-y-4"
-            >
+            <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Type */}
                 <div>
-                    <label className="block text-sm text-gray-600 dark:text-gray-400">Type</label>
+                    <label className="block text-sm">Type</label>
                     <select
                         value={form.type}
-                        onChange={(e) => setForm({ ...form, type: e.target.value, category: "", subcategory: "" })}
+                        onChange={(e) =>
+                            setForm({ ...form, type: e.target.value, category: "", subcategory: "" })
+                        }
                         className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                     >
                         <option value="Income">Income</option>
@@ -68,7 +71,7 @@ export default function AddTransaction() {
 
                 {/* Category */}
                 <div>
-                    <label className="block text-sm text-gray-600 dark:text-gray-400">Category</label>
+                    <label className="block text-sm">Category</label>
                     <select
                         value={form.category}
                         onChange={(e) => setForm({ ...form, category: e.target.value, subcategory: "" })}
@@ -85,7 +88,7 @@ export default function AddTransaction() {
 
                 {/* Subcategory */}
                 <div>
-                    <label className="block text-sm text-gray-600 dark:text-gray-400">Subcategory</label>
+                    <label className="block text-sm">Subcategory</label>
                     <select
                         value={form.subcategory}
                         onChange={(e) => setForm({ ...form, subcategory: e.target.value })}
@@ -103,7 +106,7 @@ export default function AddTransaction() {
 
                 {/* Amount */}
                 <div>
-                    <label className="block text-sm text-gray-600 dark:text-gray-400">Amount</label>
+                    <label className="block text-sm">Amount</label>
                     <input
                         type="number"
                         value={form.amount}
@@ -115,7 +118,7 @@ export default function AddTransaction() {
 
                 {/* Date */}
                 <div>
-                    <label className="block text-sm text-gray-600 dark:text-gray-400">Date</label>
+                    <label className="block text-sm">Date</label>
                     <input
                         type="date"
                         value={form.date}
@@ -124,14 +127,35 @@ export default function AddTransaction() {
                     />
                 </div>
 
+                {/* Note */}
+                <div>
+                    <label className="block text-sm">Note</label>
+                    <textarea
+                        value={form.note}
+                        onChange={(e) => setForm({ ...form, note: e.target.value })}
+                        rows={3}
+                        placeholder="Optional note about this transaction..."
+                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                    />
+                </div>
+
                 {/* Submit */}
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                    Save Transaction
-                </button>
+                <div className="flex justify-end space-x-3">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                    >
+                        Save
+                    </button>
+                </div>
             </form>
-        </motion.div>
+        </div>
     );
 }
