@@ -26,5 +26,5 @@ Spendly is a simple and intuitive **money manager app** built with the **MERN st
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/spendly.git
+git clone https://github.com/AjithkumarJM/Spendly
 cd spendly
