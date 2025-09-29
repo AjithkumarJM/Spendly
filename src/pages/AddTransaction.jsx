@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
 
-// Category dummy data (same as before)
+// Dummy category data for now (to be moved to Redux/DB later)
 const categories = {
     Income: {
         Salary: ["Base Pay", "Bonus", "Commission"],
@@ -28,24 +28,50 @@ const categories = {
 export default function AddTransaction({ onClose }) {
     const dispatch = useDispatch();
 
-    // Default date = today
-    const today = new Date().toISOString().split("T")[0];
+    // Default date + time
+    const today = new Date();
+    const defaultDate = today.toISOString().split("T")[0]; // YYYY-MM-DD
+    const defaultTime = today.toTimeString().slice(0, 5); // HH:mm
 
     const [form, setForm] = useState({
         type: "Expense",
         category: "",
         subcategory: "",
         amount: "",
-        date: today,
+        date: defaultDate,
+        time: defaultTime,
         note: "",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!form.category || !form.subcategory || !form.amount) return;
-        dispatch(addTransaction({ ...form, id: Date.now(), amount: Number(form.amount) }));
-        onClose(); // close modal after save
+
+        dispatch(
+            addTransaction({
+                ...form,
+                id: Date.now(),
+                amount: Number(form.amount),
+            })
+        );
+
+        // ✅ Close modal after successful save
+        if (onClose) {
+            onClose();
+        }
+
+        // Optional: reset form for next time
+        setForm({
+            type: "Expense",
+            category: "",
+            subcategory: "",
+            amount: "",
+            date: defaultDate,
+            time: defaultTime,
+            note: "",
+        });
     };
+
 
     const availableCategories = Object.keys(categories[form.type] || {});
     const availableSubcategories = categories[form.type]?.[form.category] || [];
@@ -127,6 +153,17 @@ export default function AddTransaction({ onClose }) {
                     />
                 </div>
 
+                {/* Time */}
+                <div>
+                    <label className="block text-sm">Time</label>
+                    <input
+                        type="time"
+                        value={form.time}
+                        onChange={(e) => setForm({ ...form, time: e.target.value })}
+                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                    />
+                </div>
+
                 {/* Note */}
                 <div>
                     <label className="block text-sm">Note</label>
@@ -139,7 +176,7 @@ export default function AddTransaction({ onClose }) {
                     />
                 </div>
 
-                {/* Submit */}
+                {/* Buttons */}
                 <div className="flex justify-end space-x-3">
                     <button
                         type="button"
