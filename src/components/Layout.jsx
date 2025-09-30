@@ -39,10 +39,10 @@ export default function Layout({ children }) {
                 darkMode={darkMode}
                 setDarkMode={setDarkMode}
             />
-            <main className={`flex-1 p-6 overflow-y-auto h-screen transition-all duration-300 ${collapsed ? "ml-20" : "ml-64"}`}>
+            <main className={`flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300 pb-28 md:pb-0 ${collapsed ? "md:ml-20" : "md:ml-64"}`}>
                 {children}
                 {/* Floating Add Button with tooltip */}
-                <div className="fixed bottom-6 right-6 group">
+                <div className="fixed bottom-20 right-6 z-50 md:bottom-6 md:z-auto group">
                     <button
                         onClick={() => setShowModal(true)}
                         className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"

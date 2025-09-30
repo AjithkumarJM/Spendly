@@ -148,25 +148,29 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                     <div className="text-2xl font-bold text-blue-700 dark:text-blue-200">{currency} {totalIncome - totalExpense}</div>
                 </div>
             </div>
-            <ResponsiveContainer width="100%" height={320}>
-                <PieChart>
-                    <Pie
-                        data={chartData}
-                        dataKey="amount"
-                        nameKey="category"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={110}
-                        label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-                    >
-                        {chartData.map((entry, idx) => (
-                            <Cell key={`cell-${idx}`} fill={entry.fill} />
-                        ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${currency} ${value}`} />
-                    <Legend />
-                </PieChart>
-            </ResponsiveContainer>
+            <div className="w-full overflow-x-auto">
+                <div className="min-w-[400px] sm:min-w-0">
+                    <ResponsiveContainer width="100%" height={320}>
+                        <PieChart>
+                            <Pie
+                                data={chartData}
+                                dataKey="amount"
+                                nameKey="category"
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={110}
+                                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                            >
+                                {chartData.map((entry, idx) => (
+                                    <Cell key={`cell-${idx}`} fill={entry.fill} />
+                                ))}
+                            </Pie>
+                            <Tooltip formatter={(value) => `${currency} ${value}`} />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
             <div className="mt-8">
                 {categories.length === 0 && (
                     <div className="text-center text-gray-500">No data available.</div>

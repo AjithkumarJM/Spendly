@@ -57,7 +57,8 @@ export default function Transactions() {
 
     const groupedByDay = groupByDate(filtered);
 
-    const tabs = ["daily", "calendar", "monthly", "stats"];
+    const isMobile = window.innerWidth < 768;
+    const tabs = isMobile ? ["daily", "monthly", "stats"] : ["daily", "calendar", "monthly", "stats"];
 
     return (
         <motion.div
