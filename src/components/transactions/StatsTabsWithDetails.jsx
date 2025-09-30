@@ -63,7 +63,9 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
     });
 
     const chartData = getCategoryData(filtered, tab);
-    const categories = chartData.map((d) => d.category);
+    // Sort chartData by amount descending
+    const sortedChartData = [...chartData].sort((a, b) => b.amount - a.amount);
+    const categories = sortedChartData.map((d) => d.category);
     const monthLabel = new Date(selectedYear, selectedMonth - 1).toLocaleString("default", { month: "long", year: "numeric" });
 
     const totalIncome = filtered.filter(tx => tx.type === "Income").reduce((sum, tx) => sum + tx.amount, 0);
@@ -125,7 +127,7 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                 />
             )}
             {/* Summary cards for selected period */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
                 <div className="flex flex-col items-center rounded-2xl bg-emerald-50 dark:bg-emerald-900 p-6 shadow-md">
                     <div className="bg-emerald-100 dark:bg-emerald-800 rounded-full p-3 mb-2">
                         <TrendingUp size={32} className="text-emerald-600" />
@@ -153,15 +155,16 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                     <ResponsiveContainer width="100%" height={320}>
                         <PieChart>
                             <Pie
-                                data={chartData}
+                                data={sortedChartData}
                                 dataKey="amount"
                                 nameKey="category"
                                 cx="50%"
                                 cy="50%"
-                                outerRadius={110}
+                                outerRadius={130}
                                 label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                                labelStyle={{ fontSize: 10 }}
                             >
-                                {chartData.map((entry, idx) => (
+                                {sortedChartData.map((entry, idx) => (
                                     <Cell key={`cell-${idx}`} fill={entry.fill} />
                                 ))}
                             </Pie>
@@ -171,18 +174,18 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                     </ResponsiveContainer>
                 </div>
             </div>
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
                 {categories.length === 0 && (
                     <div className="text-center text-gray-500">No data available.</div>
                 )}
                 {categories.map((cat) => {
-                    const chartEntry = chartData.find((d) => d.category === cat);
+                    const chartEntry = sortedChartData.find((d) => d.category === cat);
                     const total = chartEntry?.amount || 0;
                     const chipColor = chartEntry?.fill || "#e0e7ff";
                     const subData = getSubcategoryData(filtered, tab, cat);
                     const isOpen = expanded === cat;
                     // Calculate percentage for this category
-                    const totalForType = chartData.reduce((sum, d) => sum + d.amount, 0);
+                    const totalForType = sortedChartData.reduce((sum, d) => sum + d.amount, 0);
                     const percent = totalForType > 0 ? ((total / totalForType) * 100).toFixed(1) : 0;
                     return (
                         <div key={cat} className="mb-2 border-b dark:border-gray-700">

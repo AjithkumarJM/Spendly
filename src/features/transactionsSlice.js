@@ -15,6 +15,15 @@ const transactionsSlice = createSlice({
         addTransaction: (state, action) => {
             state.transactions.push(action.payload);
         },
+        editTransaction: (state, action) => {
+            const idx = state.transactions.findIndex(t => t.id === action.payload.id);
+            if (idx !== -1) {
+                state.transactions[idx] = action.payload;
+            }
+        },
+        deleteTransaction: (state, action) => {
+            state.transactions = state.transactions.filter(t => t.id !== action.payload);
+        },
         setMonth: (state, action) => {
             state.selectedMonth = action.payload;
         },
@@ -27,5 +36,5 @@ const transactionsSlice = createSlice({
     },
 });
 
-export const { addTransaction, setMonth, setYear, setViewMode } = transactionsSlice.actions;
+export const { addTransaction, editTransaction, deleteTransaction, setMonth, setYear, setViewMode } = transactionsSlice.actions;
 export default transactionsSlice.reducer;

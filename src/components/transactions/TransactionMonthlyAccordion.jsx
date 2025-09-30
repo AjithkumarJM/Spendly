@@ -45,7 +45,7 @@ export default function TransactionMonthlyAccordion({
                     return (
                         <details
                             key={month}
-                            className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4"
+                            className="bg-white dark:bg-gray-800 rounded-xl shadow p-3 sm:p-6 border-l-4 border-blue-500"
                         >
                             <summary className="cursor-pointer flex justify-between items-center font-semibold">
                                 {label}

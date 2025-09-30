@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
 import FormInput from "../components/common/FormInput";
 import { categories } from "../data/categories";
 
-export default function AddTransaction({ onClose }) {
+export default function AddTransaction({ onClose, initialData, onSave }) {
     const dispatch = useDispatch();
 
     // Default date + time
@@ -12,45 +12,60 @@ export default function AddTransaction({ onClose }) {
     const defaultDate = today.toISOString().split("T")[0]; // YYYY-MM-DD
     const defaultTime = today.toTimeString().slice(0, 5); // HH:mm
 
-    const [form, setForm] = useState({
-        type: "Expense",
-        category: "",
-        subcategory: "",
-        amount: "",
-        date: defaultDate,
-        time: defaultTime,
-        note: "",
-    });
+    const [form, setForm] = useState(() =>
+        initialData
+            ? { ...initialData, amount: initialData.amount.toString() }
+            : {
+                type: "Expense",
+                category: "",
+                subcategory: "",
+                amount: "",
+                date: defaultDate,
+                time: defaultTime,
+                note: "",
+            }
+    );
+
+    useEffect(() => {
+        if (initialData) {
+            setForm({ ...initialData, amount: initialData.amount.toString() });
+        }
+    }, [initialData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!form.category || !form.subcategory || !form.amount) return;
 
-        dispatch(
-            addTransaction({
-                ...form,
-                id: Date.now(),
-                amount: Number(form.amount),
-            })
-        );
+        const tx = {
+            ...form,
+            id: initialData ? initialData.id : Date.now(),
+            amount: Number(form.amount),
+        };
 
-        // ✅ Close modal after successful save
-        if (onClose) {
-            onClose();
+        if (onSave) {
+            onSave(tx);
+        } else {
+            dispatch(addTransaction(tx));
+
+            // ✅ Close modal after successful save
+            if (onClose) {
+                onClose();
+            }
         }
 
         // Optional: reset form for next time
-        setForm({
-            type: "Expense",
-            category: "",
-            subcategory: "",
-            amount: "",
-            date: defaultDate,
-            time: defaultTime,
-            note: "",
-        });
+        if (!initialData) {
+            setForm({
+                type: "Expense",
+                category: "",
+                subcategory: "",
+                amount: "",
+                date: defaultDate,
+                time: defaultTime,
+                note: "",
+            });
+        }
     };
-
 
     const availableCategories = Object.keys(categories[form.type] || {});
     const availableSubcategories = categories[form.type]?.[form.category] || [];
