@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Landmark } from "lucide-react";
 
@@ -52,6 +52,15 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
     const today = new Date();
     const [selectedYear, setSelectedYear] = useState(today.getFullYear());
     const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
+    // Track dark mode for chart color
+    const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDarkMode(document.documentElement.classList.contains("dark"));
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+        return () => observer.disconnect();
+    }, []);
 
     // Filter transactions by selected month/year or whole year
     const filtered = transactions.filter((tx) => {
@@ -160,7 +169,7 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                                 top: "bottom",
                                 textStyle: {
                                     fontSize: 16,
-                                    color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "#e5e7eb" : "#4B5563"
+                                    color: isDarkMode ? "#e5e7eb" : "#666666"
                                 }
                             },
                             series: [
@@ -174,7 +183,7 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                                         show: true,
                                         fontSize: 16,
                                         fontWeight: "bold",
-                                        color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "#e5e7eb" : "#4B5563",
+                                        color: isDarkMode ? "#e5e7eb" : "#666666",
                                         formatter: "{b}: {d}%"
                                     },
                                     data: sortedChartData.map(d => ({
