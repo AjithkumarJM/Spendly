@@ -8,7 +8,7 @@ import { groupByDate, groupByWeeks } from "../utils/transactionUtils";
 import TransactionDayList from "../components/transactions/TransactionDayList";
 import TransactionCalendar from "../components/transactions/TransactionCalendar";
 import TransactionMonthlyAccordion from "../components/transactions/TransactionMonthlyAccordion";
-import TransactionTotalSummary from "../components/transactions/TransactionTotalSummary";
+import StatsTabsWithDetails from "../components/transactions/StatsTabsWithDetails";
 
 export default function Transactions() {
     const { transactions, selectedMonth, selectedYear } = useSelector(
@@ -57,14 +57,7 @@ export default function Transactions() {
 
     const groupedByDay = groupByDate(filtered);
 
-    const totalIncome = filtered
-        .filter((t) => t.type === "Income")
-        .reduce((a, b) => a + b.amount, 0);
-    const totalExpense = filtered
-        .filter((t) => t.type === "Expense")
-        .reduce((a, b) => a + b.amount, 0);
-
-    const tabs = ["daily", "calendar", "monthly", "total"];
+    const tabs = ["daily", "calendar", "monthly", "stats"];
 
     return (
         <motion.div
@@ -100,12 +93,12 @@ export default function Transactions() {
                     setYear={setYear}
                 />
             )}
-            {view === "total" && (
-                <TransactionTotalSummary
-                    monthLabel={monthLabel}
+            {view === "stats" && (
+                <StatsTabsWithDetails
+                    transactions={transactions}
                     currency={currency}
-                    totalIncome={totalIncome}
-                    totalExpense={totalExpense}
+                    selectedMonth={selectedMonth}
+                    selectedYear={selectedYear}
                 />
             )}
         </motion.div>

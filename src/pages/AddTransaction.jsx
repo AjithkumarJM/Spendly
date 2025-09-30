@@ -2,29 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
 import FormInput from "../components/common/FormInput";
-
-// Dummy category data for now (to be moved to Redux/DB later)
-const categories = {
-    Income: {
-        Salary: ["Base Pay", "Bonus", "Commission"],
-        Business: ["Sales", "Services", "Investments"],
-        Freelance: ["Projects", "Consulting", "Others"],
-        Gifts: ["Cash Gift", "Other Gifts"],
-        Other: ["Miscellaneous"],
-    },
-    Expense: {
-        Housing: ["Rent/Mortgage", "Utilities", "Internet & Phone", "Maintenance"],
-        Transportation: ["Fuel", "Public Transit", "Ride-Hailing", "Parking", "Repairs"],
-        "Food & Dining": ["Groceries", "Restaurants", "Coffee/Snacks"],
-        Shopping: ["Clothing", "Electronics", "Household", "Personal Care"],
-        "Health & Fitness": ["Medical", "Pharmacy", "Gym", "Insurance"],
-        Entertainment: ["Subscriptions", "Movies", "Hobbies"],
-        Education: ["Tuition", "Books", "Online Courses"],
-        Travel: ["Flights", "Hotels", "Local Transport", "Food & Misc"],
-        "Financial Obligations": ["Loan", "Credit Card", "Investments"],
-        Miscellaneous: ["Donations", "Gifts", "Pets", "Other"],
-    },
-};
+import { categories } from "../data/categories";
 
 export default function AddTransaction({ onClose }) {
     const dispatch = useDispatch();

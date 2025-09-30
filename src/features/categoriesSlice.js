@@ -1,23 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-const initialState = {
-    Income: {
-        Salary: ["Base Pay", "Bonus", "Commission"],
-        Business: ["Sales", "Services", "Investments"],
-        Freelance: ["Projects", "Consulting", "Others"],
-        Gifts: ["Cash Gift", "Other Gifts"],
-    },
-    Expense: {
-        Housing: ["Rent/Mortgage", "Utilities", "Internet & Phone", "Maintenance"],
-        Transportation: ["Fuel", "Public Transit", "Ride-Hailing"],
-        "Food & Dining": ["Groceries", "Restaurants", "Coffee/Snacks"],
-        Shopping: ["Clothing", "Electronics", "Household", "Personal Care"],
-    },
-};
+import { categories } from "../data/categories";
 
 const categoriesSlice = createSlice({
     name: "categories",
-    initialState,
+    initialState: categories,
     reducers: {
         addCategory: (state, action) => {
             const { type, category } = action.payload;
