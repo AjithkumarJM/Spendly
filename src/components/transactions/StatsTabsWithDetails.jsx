@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import ReactECharts from "echarts-for-react";
 import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Landmark } from "lucide-react";
 
 import MonthYearNav from "../common/MonthYearNav";
@@ -152,26 +152,40 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
             </div>
             <div className="w-full overflow-x-auto">
                 <div className="min-w-[400px] sm:min-w-0">
-                    <ResponsiveContainer width="100%" height={320}>
-                        <PieChart>
-                            <Pie
-                                data={sortedChartData}
-                                dataKey="amount"
-                                nameKey="category"
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={130}
-                                label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
-                                labelStyle={{ fontSize: 10 }}
-                            >
-                                {sortedChartData.map((entry, idx) => (
-                                    <Cell key={`cell-${idx}`} fill={entry.fill} />
-                                ))}
-                            </Pie>
-                            <Tooltip formatter={(value) => `${currency} ${value}`} />
-                            <Legend />
-                        </PieChart>
-                    </ResponsiveContainer>
+                    <ReactECharts
+                        style={{ height: 320, width: "100%" }}
+                        option={{
+                            tooltip: { trigger: "item" },
+                            legend: {
+                                top: "bottom",
+                                textStyle: {
+                                    fontSize: 16,
+                                    color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "#e5e7eb" : "#4B5563"
+                                }
+                            },
+                            series: [
+                                {
+                                    name: tab,
+                                    type: "pie",
+                                    radius: ["40%", "70%"],
+                                    avoidLabelOverlap: false,
+                                    itemStyle: { borderRadius: 10, borderColor: "#fff", borderWidth: 2 },
+                                    label: {
+                                        show: true,
+                                        fontSize: 16,
+                                        fontWeight: "bold",
+                                        color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "#e5e7eb" : "#4B5563",
+                                        formatter: "{b}: {d}%"
+                                    },
+                                    data: sortedChartData.map(d => ({
+                                        value: d.amount,
+                                        name: d.category,
+                                        itemStyle: { color: d.fill }
+                                    }))
+                                }
+                            ]
+                        }}
+                    />
                 </div>
             </div>
             <div className="mt-6 sm:mt-8">

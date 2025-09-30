@@ -34,7 +34,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!form.category || !form.subcategory || !form.amount) return;
+        if (!form.category || !form.amount) return;
 
         const tx = {
             ...form,
@@ -98,8 +98,8 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     as="select"
                     value={form.subcategory}
                     onChange={e => setForm(f => ({ ...f, subcategory: e.target.value }))}
-                    options={availableSubcategories}
-                    required
+                    options={["", ...availableSubcategories]}
+                    required={false}
                     disabled={!form.category}
                 />
                 <FormInput
