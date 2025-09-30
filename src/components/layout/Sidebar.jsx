@@ -32,7 +32,7 @@ export default function Sidebar({ collapsed, setCollapsed, darkMode, setDarkMode
                 <UserProfile collapsed={true} />
                 <button
                     onClick={() => setDarkMode(!darkMode)}
-                    className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 ml-2"
+                    className="p-3 rounded hover:bg-gray-100 dark:hover:bg-gray-700 ml-2"
                     aria-label="Toggle dark mode"
                 >
                     {darkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -50,7 +50,7 @@ export default function Sidebar({ collapsed, setCollapsed, darkMode, setDarkMode
             <div className="hidden md:block p-4 border-t dark:border-gray-700 mt-auto">
                 <button
                     onClick={() => setDarkMode(!darkMode)}
-                    className="flex items-center w-full p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="p-4 flex items-center w-full p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                     {darkMode ? <Sun size={18} /> : <Moon size={18} />}
                     {!collapsed && (

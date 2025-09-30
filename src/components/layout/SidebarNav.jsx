@@ -11,7 +11,7 @@ const navItems = [
 export default function SidebarNav({ collapsed }) {
     const location = useLocation();
     return (
-        <nav className="flex flex-row w-full justify-around md:flex-col md:w-full md:justify-start md:space-y-1">
+        <nav className="p-3 flex flex-row w-full justify-around md:flex-col md:w-full md:justify-start md:space-y-1">
             {navItems.map((item) => (
                 <Link
                     key={item.to}
