@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
+import FormInput from "../components/common/FormInput";
 
 // Dummy category data for now (to be moved to Redux/DB later)
 const categories = {
@@ -80,114 +81,79 @@ export default function AddTransaction({ onClose }) {
         <div>
             <h1 className="text-2xl font-semibold mb-4">Add Transaction</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Type */}
-                <div>
-                    <label className="block text-sm">Type</label>
-                    <select
-                        value={form.type}
-                        onChange={(e) =>
-                            setForm({ ...form, type: e.target.value, category: "", subcategory: "" })
-                        }
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    >
-                        <option value="Income">Income</option>
-                        <option value="Expense">Expense</option>
-                    </select>
-                </div>
-
-                {/* Category */}
-                <div>
-                    <label className="block text-sm">Category</label>
-                    <select
-                        value={form.category}
-                        onChange={(e) => setForm({ ...form, category: e.target.value, subcategory: "" })}
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    >
-                        <option value="">Select Category</option>
-                        {availableCategories.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {cat}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Subcategory */}
-                <div>
-                    <label className="block text-sm">Subcategory</label>
-                    <select
-                        value={form.subcategory}
-                        onChange={(e) => setForm({ ...form, subcategory: e.target.value })}
-                        disabled={!form.category}
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 disabled:opacity-50"
-                    >
-                        <option value="">Select Subcategory</option>
-                        {availableSubcategories.map((sub) => (
-                            <option key={sub} value={sub}>
-                                {sub}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                {/* Amount */}
-                <div>
-                    <label className="block text-sm">Amount</label>
-                    <input
-                        type="number"
-                        value={form.amount}
-                        onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                        placeholder="e.g. 100"
-                    />
-                </div>
-
-                {/* Date */}
-                <div>
-                    <label className="block text-sm">Date</label>
-                    <input
-                        type="date"
-                        value={form.date}
-                        onChange={(e) => setForm({ ...form, date: e.target.value })}
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    />
-                </div>
-
-                {/* Time */}
-                <div>
-                    <label className="block text-sm">Time</label>
-                    <input
-                        type="time"
-                        value={form.time}
-                        onChange={(e) => setForm({ ...form, time: e.target.value })}
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    />
-                </div>
-
-                {/* Note */}
-                <div>
-                    <label className="block text-sm">Note</label>
-                    <textarea
-                        value={form.note}
-                        onChange={(e) => setForm({ ...form, note: e.target.value })}
-                        rows={3}
-                        placeholder="Optional note about this transaction..."
-                        className="w-full border rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-                    />
-                </div>
-
-                {/* Buttons */}
-                <div className="flex justify-end space-x-3">
+                <FormInput
+                    label="Type"
+                    name="type"
+                    as="select"
+                    value={form.type}
+                    onChange={e => setForm(f => ({ ...f, type: e.target.value, category: "", subcategory: "" }))}
+                    options={["Expense", "Income"]}
+                    required
+                />
+                <FormInput
+                    label="Category"
+                    name="category"
+                    as="select"
+                    value={form.category}
+                    onChange={e => setForm(f => ({ ...f, category: e.target.value, subcategory: "" }))}
+                    options={availableCategories}
+                    required
+                />
+                <FormInput
+                    label="Subcategory"
+                    name="subcategory"
+                    as="select"
+                    value={form.subcategory}
+                    onChange={e => setForm(f => ({ ...f, subcategory: e.target.value }))}
+                    options={availableSubcategories}
+                    required
+                    disabled={!form.category}
+                />
+                <FormInput
+                    label="Amount"
+                    name="amount"
+                    type="number"
+                    value={form.amount}
+                    onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
+                    min="0"
+                    step="0.01"
+                    required
+                />
+                <FormInput
+                    label="Date"
+                    name="date"
+                    type="date"
+                    value={form.date}
+                    onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                    required
+                />
+                <FormInput
+                    label="Time"
+                    name="time"
+                    type="time"
+                    value={form.time}
+                    onChange={e => setForm(f => ({ ...f, time: e.target.value }))}
+                    required
+                />
+                <FormInput
+                    label="Note (optional)"
+                    name="note"
+                    as="textarea"
+                    value={form.note}
+                    onChange={e => setForm(f => ({ ...f, note: e.target.value }))}
+                    placeholder="Add a note..."
+                />
+                <div className="flex justify-end space-x-2 pt-2">
                     <button
                         type="button"
+                        className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
                         onClick={onClose}
-                        className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                        className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 font-semibold"
                     >
                         Save
                     </button>
