@@ -53,6 +53,8 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
             }
         }
 
+        if (onClose) onClose();
+
         // Optional: reset form for next time
         if (!initialData) {
             setForm({

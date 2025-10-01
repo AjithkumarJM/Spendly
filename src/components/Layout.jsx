@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Outlet } from "react-router-dom";
 import AddTransaction from "../pages/AddTransaction";
 import Sidebar from "./layout/Sidebar";
 
@@ -41,6 +42,7 @@ export default function Layout({ children }) {
             />
             <main className={`h-screen flex-1 p-4 sm:p-6 overflow-y-auto transition-all duration-300 pb-28 md:pb-0 ${collapsed ? "md:ml-20" : "md:ml-64"} mb-6`}>
                 {children}
+                <Outlet />
                 {/* Floating Add Button with tooltip */}
                 <div className="fixed bottom-20 right-6 z-50 md:bottom-6 md:z-auto group">
                     <button
