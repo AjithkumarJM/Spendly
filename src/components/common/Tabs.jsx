@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Tabs({ tabs, activeTab, onTabChange }) {
     return (
-        <div className="flex space-x-3 mb-4">
+        <div className="flex space-x-3 mb-4 justify-center">
             {tabs.map((tab) => (
                 <button
                     key={tab}

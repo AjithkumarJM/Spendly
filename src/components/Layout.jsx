@@ -6,9 +6,11 @@ import AddTransaction from "../pages/AddTransaction";
 import Sidebar from "./layout/Sidebar";
 
 export default function Layout({ children }) {
-    const [darkMode, setDarkMode] = useState(
-        () => JSON.parse(localStorage.getItem("darkMode")) || false
-    );
+    const [darkMode, setDarkMode] = useState(() => {
+        const stored = localStorage.getItem("darkMode");
+        if (stored === null) return true; // Default to dark mode
+        return JSON.parse(stored);
+    });
     const [collapsed, setCollapsed] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
@@ -24,7 +26,8 @@ export default function Layout({ children }) {
     // Keyboard shortcut for Add Transaction ("A" key)
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if ((e.key === "a" || e.key === "A") && !showModal) {
+            const tag = document.activeElement.tagName.toLowerCase();
+            if ((e.key === "a" || e.key === "A") && !showModal && !["input", "textarea", "select"].includes(tag)) {
                 setShowModal(true);
             }
         };

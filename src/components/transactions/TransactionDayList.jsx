@@ -5,7 +5,7 @@ export default function TransactionDayList({ groupedByDay, currency, onEdit, onD
     // Sort dates descending (most recent first)
     const sortedDates = Object.keys(groupedByDay).sort((a, b) => new Date(b) - new Date(a));
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 md:w-[600px] mx-auto">
             {sortedDates.length === 0 && (
                 <p className="text-gray-500 dark:text-gray-400">No transactions found.</p>
             )}

@@ -11,15 +11,20 @@ export default function FormInput({
     required = false,
     disabled = false,
     placeholder = "",
+    error,
+    className = "",
     ...props
 }) {
     return (
-        <div>
-            {label && <label className="block font-medium mb-1">{label}</label>}
+        <div className={"mb-2 " + className}>
+            {label && <label className="block mb-1 font-medium text-blue-700 dark:text-blue-300">{label}</label>}
             {as === "select" ? (
                 <select
                     name={name}
-                    className="w-full p-2 rounded border dark:bg-gray-700 dark:text-white"
+                    className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 transition-all dark:bg-gray-700 dark:text-white ${error
+                            ? "border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900"
+                            : "border-gray-300 focus:ring-blue-400 bg-white dark:bg-gray-700"
+                        }`}
                     value={value}
                     onChange={onChange}
                     required={required}
@@ -34,7 +39,10 @@ export default function FormInput({
             ) : as === "textarea" ? (
                 <textarea
                     name={name}
-                    className="w-full p-2 rounded border dark:bg-gray-700 dark:text-white"
+                    className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 transition-all dark:bg-gray-700 dark:text-white ${error
+                            ? "border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900"
+                            : "border-gray-300 focus:ring-blue-400 bg-white dark:bg-gray-700"
+                        }`}
                     value={value}
                     onChange={onChange}
                     required={required}
@@ -47,7 +55,10 @@ export default function FormInput({
                 <input
                     name={name}
                     type={type}
-                    className="w-full p-2 rounded border dark:bg-gray-700 dark:text-white"
+                    className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 transition-all dark:bg-gray-700 dark:text-white ${error
+                            ? "border-red-500 focus:ring-red-400 bg-red-50 dark:bg-red-900"
+                            : "border-gray-300 focus:ring-blue-400 bg-white dark:bg-gray-700"
+                        }`}
                     value={value}
                     onChange={onChange}
                     required={required}
@@ -56,6 +67,7 @@ export default function FormInput({
                     {...props}
                 />
             )}
+            {error && <div className="text-xs text-red-500 mt-1">{error}</div>}
         </div>
     );
 }
