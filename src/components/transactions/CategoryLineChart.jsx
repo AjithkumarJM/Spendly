@@ -1,5 +1,6 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
+import { formatK } from "../../utils/numberFormat";
 
 const MONTHS = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -25,7 +26,13 @@ export default function CategoryLineChart({ transactions, category, year, curren
             style={{ height: 220, width: "100%" }}
             option={{
                 grid: { left: 40, right: 20, top: 30, bottom: 30 },
-                tooltip: { trigger: "axis" },
+                tooltip: {
+                    trigger: "axis",
+                    formatter: (params) => {
+                        const p = params[0];
+                        return `${p.axisValue}: ${currency} ${formatK(p.data)}`.replace('{currency}', currency);
+                    }
+                },
                 xAxis: {
                     type: "category",
                     data: MONTHS,
@@ -36,7 +43,7 @@ export default function CategoryLineChart({ transactions, category, year, curren
                     type: "value",
                     axisLabel: {
                         color: isDark ? "#e5e7eb" : "#374151",
-                        formatter: v => `${currency} ${v}`
+                        formatter: v => `${currency}${formatK(v)}`
                     },
                     splitLine: { lineStyle: { color: isDark ? "#374151" : "#e5e7eb", type: "dashed" } }
                 },

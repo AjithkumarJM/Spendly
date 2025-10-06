@@ -42,7 +42,7 @@ export default function TransactionDayList({ groupedByDay, currency, onEdit, onD
                                         <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 px-2 sm:px-3 py-1.5 transition hover:shadow-md">
                                             <div className="flex items-center justify-between gap-2">
                                                 <div className="flex items-center gap-1 min-w-0">
-                                                    <span className={`font-bold text-sm ${tx.type === "Expense" ? "text-rose-600" : "text-emerald-600"}`}>{tx.type === "Expense" ? "-" : "+"}{currency} {tx.amount}</span>
+                                                    <span className={`font-bold text-sm ${tx.type === "Expense" ? "text-rose-600" : "text-emerald-600"}`}>{currency}{tx.amount}</span>
                                                     <span className="truncate text-xs font-medium ml-1 text-gray-800 dark:text-gray-100">{tx.category}{tx.subcategory ? ` → ${tx.subcategory}` : ""}</span>
                                                 </div>
                                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity sm:opacity-100">
