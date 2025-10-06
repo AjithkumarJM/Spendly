@@ -95,13 +95,13 @@ export default function Dashboard() {
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
                     <h2 className="text-gray-500 dark:text-gray-400">Total Income</h2>
                     <p className="text-2xl font-bold text-emerald-600">
-                        +{currency} {totalIncome}
+                        {currency} {totalIncome}
                     </p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
                     <h2 className="text-gray-500 dark:text-gray-400">Total Expense</h2>
                     <p className="text-2xl font-bold text-rose-600">
-                        -{currency} {totalExpense}
+                        {currency} {totalExpense}
                     </p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">

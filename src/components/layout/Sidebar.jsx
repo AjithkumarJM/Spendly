@@ -2,11 +2,8 @@ import React from "react";
 import UserProfile from "./UserProfile";
 import SidebarNav from "./SidebarNav";
 import { Moon, Sun, Menu, ChevronLeft } from "lucide-react";
-import { useSelector } from "react-redux";
 
 export default function Sidebar({ collapsed, setCollapsed, darkMode, setDarkMode }) {
-    const user = useSelector(state => state.auth?.user);
-
     return (
         <aside
             className={`

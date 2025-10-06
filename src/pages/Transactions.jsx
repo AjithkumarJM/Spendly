@@ -79,7 +79,6 @@ export default function Transactions() {
             animate={{ opacity: 1 }}
             className="space-y-6"
         >
-            <h1 className="text-2xl font-semibold mb-4">Transactions</h1>
             {/* Tabs */}
             <Tabs tabs={tabs} activeTab={view} onTabChange={setView} />
             {/* Month navigation only in Daily tab */}

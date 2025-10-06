@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
-import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Landmark } from "lucide-react";
 
 import MonthYearNav from "../common/MonthYearNav";
+import SummaryCards from "./SummaryCards";
+import CategoryList from "./CategoryList";
 
 const COLORS = {
     income: "#34d399", // emerald-400
@@ -33,16 +34,6 @@ function getCategoryData(transactions, type) {
         amount,
         fill: COLORS.bar[idx % COLORS.bar.length]
     }));
-}
-
-function getSubcategoryData(transactions, type, category) {
-    const grouped = {};
-    transactions.filter(tx => tx.type === type && tx.category === category).forEach(tx => {
-        const sub = tx.subcategory || "General";
-        if (!grouped[sub]) grouped[sub] = 0;
-        grouped[sub] += tx.amount;
-    });
-    return Object.entries(grouped).map(([subcategory, amount]) => ({ subcategory, amount }));
 }
 
 export default function StatsTabsWithDetails({ transactions, currency }) {
@@ -82,6 +73,7 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+            {/* Tabs and mode switch */}
             <div className="flex flex-wrap items-center gap-2 mb-6">
                 {["Expense", "Income"].map((t) => (
                     <button
@@ -135,30 +127,8 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                     onNext={() => setSelectedYear(selectedYear + 1)}
                 />
             )}
-            {/* Summary cards for selected period */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-                <div className="flex flex-col items-center rounded-2xl bg-emerald-50 dark:bg-emerald-900 p-6 shadow-md">
-                    <div className="bg-emerald-100 dark:bg-emerald-800 rounded-full p-3 mb-2">
-                        <TrendingUp size={32} className="text-emerald-600" />
-                    </div>
-                    <div className="text-emerald-700 dark:text-emerald-300 text-lg font-semibold mb-1">Income</div>
-                    <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-200">+{currency} {totalIncome}</div>
-                </div>
-                <div className="flex flex-col items-center rounded-2xl bg-rose-50 dark:bg-rose-900 p-6 shadow-md">
-                    <div className="bg-rose-100 dark:bg-rose-800 rounded-full p-3 mb-2">
-                        <TrendingDown size={32} className="text-rose-600" />
-                    </div>
-                    <div className="text-rose-700 dark:text-rose-300 text-lg font-semibold mb-1">Expense</div>
-                    <div className="text-2xl font-bold text-rose-700 dark:text-rose-200">-{currency} {totalExpense}</div>
-                </div>
-                <div className="flex flex-col items-center rounded-2xl bg-blue-50 dark:bg-blue-900 p-6 shadow-md">
-                    <div className="bg-blue-100 dark:bg-blue-800 rounded-full p-3 mb-2">
-                        <Landmark size={32} className="text-blue-600" />
-                    </div>
-                    <div className="text-blue-700 dark:text-blue-300 text-lg font-semibold mb-1">Balance</div>
-                    <div className="text-2xl font-bold text-blue-700 dark:text-blue-200">{currency} {totalIncome - totalExpense}</div>
-                </div>
-            </div>
+            <SummaryCards totalIncome={totalIncome} totalExpense={totalExpense} currency={currency} />
+            {/* Pie chart */}
             <div className="w-full overflow-x-auto">
                 <div className="min-w-[400px] sm:min-w-0">
                     <ReactECharts
@@ -197,59 +167,17 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                     />
                 </div>
             </div>
-            <div className="mt-6 sm:mt-8">
-                {categories.length === 0 && (
-                    <div className="text-center text-gray-500">No data available.</div>
-                )}
-                {categories.map((cat) => {
-                    const chartEntry = sortedChartData.find((d) => d.category === cat);
-                    const total = chartEntry?.amount || 0;
-                    const chipColor = chartEntry?.fill || "#e0e7ff";
-                    const subData = getSubcategoryData(filtered, tab, cat);
-                    const isOpen = expanded === cat;
-                    // Calculate percentage for this category
-                    const totalForType = sortedChartData.reduce((sum, d) => sum + d.amount, 0);
-                    const percent = totalForType > 0 ? ((total / totalForType) * 100).toFixed(1) : 0;
-                    return (
-                        <div key={cat} className="mb-2 border-b dark:border-gray-700">
-                            <button
-                                className="w-full flex justify-between items-center py-3 px-2 text-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-                                onClick={() => setExpanded(isOpen ? null : cat)}
-                            >
-                                <span className="flex items-center gap-2">
-                                    <span
-                                        className="inline-block px-2 py-0.5 rounded-full text-xs font-bold text-white"
-                                        style={{ backgroundColor: chipColor }}
-                                    >
-                                        {percent}%
-                                    </span>
-                                    {cat}
-                                </span>
-                                <span className="flex items-center space-x-2">
-                                    <span className="font-bold text-blue-600">{currency} {total}</span>
-                                    {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                                </span>
-                            </button>
-                            {isOpen && (
-                                <div className="pl-6 pb-3">
-                                    {subData.length === 0 ? (
-                                        <div className="text-gray-500">No subcategories.</div>
-                                    ) : (
-                                        <ul className="space-y-1">
-                                            {subData.map((sub) => (
-                                                <li key={sub.subcategory} className="flex justify-between items-center py-1">
-                                                    <span>{sub.subcategory}</span>
-                                                    <span className="font-medium text-emerald-600">{currency} {sub.amount}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
+            <CategoryList
+                categories={categories}
+                sortedChartData={sortedChartData}
+                filtered={filtered}
+                tab={tab}
+                expanded={expanded}
+                setExpanded={setExpanded}
+                transactions={transactions}
+                selectedYear={selectedYear}
+                currency={currency}
+            />
         </div>
     );
 }
