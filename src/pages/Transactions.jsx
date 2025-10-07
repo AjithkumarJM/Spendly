@@ -10,6 +10,7 @@ import TransactionCalendar from "../components/transactions/TransactionCalendar"
 import TransactionMonthlyAccordion from "../components/transactions/TransactionMonthlyAccordion";
 import StatsTabsWithDetails from "../components/transactions/StatsTabsWithDetails";
 import AddTransaction from "./AddTransaction";
+import { useScreenSize } from "../context/ScreenSizeContext";
 
 export default function Transactions() {
     const { transactions, selectedMonth, selectedYear } = useSelector(
@@ -59,7 +60,7 @@ export default function Transactions() {
 
     const groupedByDay = groupByDate(filtered);
 
-    const isMobile = window.innerWidth < 768;
+    const { isMobile } = useScreenSize();
     const tabs = isMobile ? ["daily", "monthly", "stats"] : ["daily", "calendar", "monthly", "stats"];
 
     const handleEdit = (tx) => setEditModal({ open: true, tx });
@@ -117,6 +118,7 @@ export default function Transactions() {
                     currency={currency}
                     selectedMonth={selectedMonth}
                     selectedYear={selectedYear}
+                    isMobile={isMobile}
                 />
             )}
             {/* Edit Transaction Modal */}

@@ -4,6 +4,8 @@ import ReactECharts from "echarts-for-react";
 import MonthYearNav from "../common/MonthYearNav";
 import SummaryCards from "./SummaryCards";
 import CategoryList from "./CategoryList";
+import { formatK } from "../../utils/numberFormat";
+import { useScreenSize } from "../../context/ScreenSizeContext";
 
 const COLORS = {
     income: "#34d399", // emerald-400
@@ -70,6 +72,7 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
 
     const totalIncome = filtered.filter(tx => tx.type === "Income").reduce((sum, tx) => sum + tx.amount, 0);
     const totalExpense = filtered.filter(tx => tx.type === "Expense").reduce((sum, tx) => sum + tx.amount, 0);
+    const { isMobile } = useScreenSize();
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
@@ -129,43 +132,48 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
             )}
             <SummaryCards totalIncome={totalIncome} totalExpense={totalExpense} currency={currency} />
             {/* Pie chart */}
-            <div className="w-full overflow-x-auto">
-                <div className="min-w-[400px] sm:min-w-0">
-                    <ReactECharts
-                        style={{ height: 320, width: "100%" }}
-                        option={{
-                            tooltip: { trigger: "item" },
-                            legend: {
-                                top: "bottom",
-                                textStyle: {
-                                    fontSize: 16,
-                                    color: isDarkMode ? "#e5e7eb" : "#666666"
-                                }
+            <div className={`w-full ${isMobile ? 'h-[160px]' : 'sm:h-[220px] md:h-[280px]'}`}>
+                <ReactECharts
+                    style={{ width: "100%", height: isMobile ? "160px" : "300px" }}
+                    option={{
+                        tooltip: { trigger: "item" },
+                        legend: {
+                            type: 'scroll',
+                            orient: 'horizontal',
+                            top: 'bottom',
+                            left: 'center',
+                            itemWidth: 14,
+                            itemHeight: 10,
+                            textStyle: {
+                                fontSize: isMobile ? 10 : 14,
+                                color: isDarkMode ? "#e5e7eb" : "#666666"
                             },
-                            series: [
-                                {
-                                    name: tab,
-                                    type: "pie",
-                                    radius: ["40%", "70%"],
-                                    avoidLabelOverlap: false,
-                                    itemStyle: { borderRadius: 10, borderColor: "#fff", borderWidth: 2 },
-                                    label: {
-                                        show: true,
-                                        fontSize: 16,
-                                        fontWeight: "bold",
-                                        color: isDarkMode ? "#e5e7eb" : "#666666",
-                                        formatter: "{b}: {d}%"
-                                    },
-                                    data: sortedChartData.map(d => ({
-                                        value: d.amount,
-                                        name: d.category,
-                                        itemStyle: { color: d.fill }
-                                    }))
-                                }
-                            ]
-                        }}
-                    />
-                </div>
+                            pageIconColor: '#6366f1',
+                            pageTextStyle: { color: isDarkMode ? "#e5e7eb" : "#666666" },
+                        },
+                        series: [
+                            {
+                                name: tab,
+                                type: "pie",
+                                radius: [isMobile ? "0%" : "40%", "70%"],
+                                avoidLabelOverlap: false,
+                                itemStyle: { borderRadius: 10, borderColor: "#fff", borderWidth: 2 },
+                                label: {
+                                    show: true,
+                                    fontSize: isMobile ? 10 : 14,
+                                    fontWeight: "bold",
+                                    color: isDarkMode ? "#e5e7eb" : "#666666",
+                                    formatter: (params) => `${params.name}: ${formatK(params.value)}`
+                                },
+                                data: sortedChartData.map(d => ({
+                                    value: d.amount,
+                                    name: d.category,
+                                    itemStyle: { color: d.fill }
+                                }))
+                            }
+                        ]
+                    }}
+                />
             </div>
             <CategoryList
                 categories={categories}
