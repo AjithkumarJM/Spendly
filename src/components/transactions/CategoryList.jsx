@@ -39,6 +39,7 @@ export default function CategoryList({
                 // Calculate percentage for this category
                 const totalForType = sortedChartData.reduce((sum, d) => sum + d.amount, 0);
                 const percent = totalForType > 0 ? ((total / totalForType) * 100).toFixed(1) : 0;
+
                 return (
                     <div
                         key={cat}

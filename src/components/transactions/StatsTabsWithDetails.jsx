@@ -163,13 +163,22 @@ export default function StatsTabsWithDetails({ transactions, currency }) {
                                     fontSize: isMobile ? 10 : 14,
                                     fontWeight: "bold",
                                     color: isDarkMode ? "#e5e7eb" : "#666666",
-                                    formatter: (params) => `${params.name}: ${formatK(params.value)}`
+                                    formatter: (params, ttl) => {
+                                        console.log(params, 'ttl');
+                                        return `${params.name}: ${params.percent}%`;
+                                    }
                                 },
-                                data: sortedChartData.map(d => ({
-                                    value: d.amount,
-                                    name: d.category,
-                                    itemStyle: { color: d.fill }
-                                }))
+                                data: sortedChartData.map((d, _, allData) => {
+                                    const totalForType = allData.reduce((sum, d) => sum + d.amount, 0);
+                                    const percent = totalForType > 0 ? ((allData.amount / totalForType) * 100).toFixed(1) : 0;
+
+                                    return {
+                                        value: d.amount,
+                                        name: d.category,
+                                        percent,
+                                        itemStyle: { color: d.fill }
+                                    };
+                                })
                             }
                         ]
                     }}
