@@ -4,7 +4,6 @@ import ReactECharts from "echarts-for-react";
 import MonthYearNav from "../common/MonthYearNav";
 import SummaryCards from "./SummaryCards";
 import CategoryList from "./CategoryList";
-import { formatK } from "../../utils/numberFormat";
 import { useScreenSize } from "../../context/ScreenSizeContext";
 
 const COLORS = {
