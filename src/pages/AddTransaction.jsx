@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { addTransaction } from "../features/transactionsSlice";
 import FormInput from "../components/common/FormInput";
 import { categories } from "../data/categories";
 
-export default function AddTransaction({ onClose, initialData, onSave }) {
+const AddTransaction = ({ onClose, initialData, onSave }) => {
     const dispatch = useDispatch();
 
     // Default date + time
@@ -32,42 +32,50 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
         }
     }, [initialData]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!form.category || !form.amount) return;
+    const handleChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    }, []);
 
-        const tx = {
-            ...form,
-            id: initialData ? initialData.id : Date.now(),
-            amount: Number(form.amount),
-        };
+    const handleSubmit = useCallback(
+        (e) => {
+            e.preventDefault();
+            if (!form.category || !form.amount) return;
 
-        if (onSave) {
-            onSave(tx);
-        } else {
-            dispatch(addTransaction(tx));
+            const tx = {
+                ...form,
+                id: initialData ? initialData.id : Date.now(),
+                amount: Number(form.amount),
+            };
 
-            // ✅ Close modal after successful save
-            if (onClose) {
-                onClose();
+            if (onSave) {
+                onSave(tx);
+            } else {
+                dispatch(addTransaction(tx));
+
+                // ✅ Close modal after successful save
+                if (onClose) {
+                    onClose();
+                }
             }
-        }
 
-        if (onClose) onClose();
+            if (onClose) onClose();
 
-        // Optional: reset form for next time
-        if (!initialData) {
-            setForm({
-                type: "Expense",
-                category: "",
-                subcategory: "",
-                amount: "",
-                date: defaultDate,
-                time: defaultTime,
-                note: "",
-            });
-        }
-    };
+            // Optional: reset form for next time
+            if (!initialData) {
+                setForm({
+                    type: "Expense",
+                    category: "",
+                    subcategory: "",
+                    amount: "",
+                    date: defaultDate,
+                    time: defaultTime,
+                    note: "",
+                });
+            }
+        },
+        [form, onSave, onClose, initialData, dispatch, defaultDate, defaultTime]
+    );
 
     const availableCategories = Object.keys(categories[form.type] || {});
     const availableSubcategories = categories[form.type]?.[form.category] || [];
@@ -81,7 +89,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="type"
                     as="select"
                     value={form.type}
-                    onChange={e => setForm(f => ({ ...f, type: e.target.value, category: "", subcategory: "" }))}
+                    onChange={handleChange}
                     options={["Expense", "Income"]}
                     required
                 />
@@ -90,7 +98,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="category"
                     as="select"
                     value={form.category}
-                    onChange={e => setForm(f => ({ ...f, category: e.target.value, subcategory: "" }))}
+                    onChange={handleChange}
                     options={availableCategories}
                     required
                 />
@@ -99,7 +107,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="subcategory"
                     as="select"
                     value={form.subcategory}
-                    onChange={e => setForm(f => ({ ...f, subcategory: e.target.value }))}
+                    onChange={handleChange}
                     options={["", ...availableSubcategories]}
                     required={false}
                     disabled={!form.category}
@@ -109,7 +117,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="amount"
                     type="number"
                     value={form.amount}
-                    onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
+                    onChange={handleChange}
                     min="0"
                     step="0.01"
                     required
@@ -119,7 +127,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="date"
                     type="date"
                     value={form.date}
-                    onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                    onChange={handleChange}
                     required
                 />
                 <FormInput
@@ -127,7 +135,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="time"
                     type="time"
                     value={form.time}
-                    onChange={e => setForm(f => ({ ...f, time: e.target.value }))}
+                    onChange={handleChange}
                     required
                 />
                 <FormInput
@@ -135,7 +143,7 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
                     name="note"
                     as="textarea"
                     value={form.note}
-                    onChange={e => setForm(f => ({ ...f, note: e.target.value }))}
+                    onChange={handleChange}
                     placeholder="Add a note..."
                 />
                 <div className="flex justify-end space-x-2 pt-2">
@@ -156,4 +164,6 @@ export default function AddTransaction({ onClose, initialData, onSave }) {
             </form>
         </div>
     );
-}
+};
+
+export default React.memo(AddTransaction);
