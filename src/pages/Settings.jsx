@@ -105,7 +105,7 @@ export default function Settings() {
                                     required
                                     placeholder="••••"
                                 />
-                                {message && <div className="mb-2 text-blue-600 dark:text-blue-300">{message}</div>}
+                                {message && <div className="mb-2 text-blue-600 dark:text-green-300">{message}</div>}
                                 <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded font-semibold">Update</button>
                             </form>
                         </motion.div>
