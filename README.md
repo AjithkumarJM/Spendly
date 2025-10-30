@@ -62,21 +62,18 @@ The app will run on http://localhost:3000 by default.
 - Date handling in the codebase uses the native Date API; consider using date-fns or Luxon for consistent timezone handling.
 - Screen-size detection reads `document.documentElement.classList` for dark mode and may need SSR guards if server-side rendering is introduced.
 
-## Known issues & suggested improvements
+## Planned enhancements
 
-A short list of areas that have been identified for improvement:
+A short list of planned enhancements to improve stability, performance, and the developer experience:
 
-- Fix duplicate onClose call in AddTransaction component (redundant invocation).
-- Correct percent calculation in the stats pie chart (use the current slice amount, not an incorrect reference).
-- Remove stray console.log statements left in chart formatters.
-- Rename misspelled prop `isCompatabible` to `isCompatible` across components to avoid bugs.
-- Memoize expensive derived data (grouping, filtering, aggregation) with React `useMemo` or `useCallback` to reduce repeated work on render.
-- Avoid using `window` or `document` during initial render to keep components SSR-safe; initialize state and update in `useEffect`.
-- Standardize date handling and normalization to avoid timezone-dependent bugs.
-- Add PropTypes or migrate to TypeScript for clearer component contracts.
-- Add unit tests for utilities and key components; add CI to run lint/tests on push.
+- Improve performance by memoizing expensive derived data and optimizing component renders.
+- Standardize date handling and timezone normalization using a dedicated date library (e.g. date-fns or Luxon).
+- Enhance SSR-safety by avoiding direct access to window/document during initial render.
+- Add type checking (PropTypes or a gradual migration to TypeScript) to clarify component contracts.
+- Add unit tests, linting, and CI to maintain long-term code quality.
+- Continue incremental UX and accessibility improvements.
 
-If you'd like, I can open a targeted PR that implements the top-priority fixes above.
+If you'd like, I can open a targeted PR that implements one or more of these enhancements.
 
 ## Contributing
 
